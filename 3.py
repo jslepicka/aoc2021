@@ -25,7 +25,7 @@ def part1(input):
 def get_rating(input, least_common=False):
     result = input
     bit = num_bits - 1
-    gamma_xor = ((1 << num_bits) - 1)
+    gamma_xor = (1 << num_bits) - 1
     while len(result) > 1:
         gamma = get_gamma(result)
         if least_common:
@@ -45,9 +45,9 @@ def main():
     global num_bits
     input = []
     with open("3.txt") as file:
-        input = [int(x.strip(), base=2) for x in file.readlines()]
-        file.seek(0)
         num_bits = len(file.readline().strip())
+        file.seek(0)
+        input = [int(x.strip(), base=2) for x in file.readlines()]
     
     print("Part 1: " + str(part1(input)))
     print("Part 2: " + str(part2(input)))
