@@ -12,9 +12,9 @@ def part1(input):
     half_input_count = len(input)/2
     counts = get_counts(input)
     gamma = 0
-    for i in range(num_bits):
+    for c in counts:
         gamma <<= 1
-        if counts[i] > half_input_count:
+        if c >= half_input_count:
             gamma |= 1
     epsilon = gamma ^ ((1 << num_bits) - 1)
     return gamma * epsilon
@@ -24,21 +24,17 @@ def get_rating(input, least_common=False):
     bit = num_bits - 1
     gamma_xor = ((1 << num_bits) - 1)
     while len(result) > 1:
-        new_result = []
         half_input_count = len(result)/2
         counts = get_counts(result)
         gamma = 0
-        for j in range(num_bits):
+        for c in counts:
             gamma <<= 1
-            if counts[j] >= half_input_count:
+            if c >= half_input_count:
                 gamma |= 1
         if least_common:
             gamma ^= gamma_xor
         check = (gamma >> bit) & 1
-        for r in result:
-            if (r >> bit) & 1 == check:
-                new_result.append(r)
-        result = new_result
+        result = list(filter(lambda r: (r >> bit) & 1 == check, result))
         bit -= 1
     return result[0]
 
