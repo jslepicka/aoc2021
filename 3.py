@@ -39,7 +39,7 @@ def get_rating(input, least_common=False):
 def part2(input):
     o2_rating = get_rating(input)
     co2_rating = get_rating(input, least_common=True)
-    return o2_rating*co2_rating
+    return o2_rating * co2_rating
 
 def main():
     global num_bits
