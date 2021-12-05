@@ -3,7 +3,7 @@ num_bits = 0
 def get_counts(input):
     counts = [0] * num_bits
     for x in input:
-        for i in reversed(range(num_bits)):
+        for i in range(num_bits):
             counts[i] += x & 1
             x >>= 1
     return counts
@@ -12,7 +12,7 @@ def get_gamma(input):
     counts = get_counts(input)
     half_input_count = len(input) / 2
     gamma = 0
-    for bit, count in enumerate(reversed(counts)):
+    for bit, count in enumerate(counts):
         if count >= half_input_count:
             gamma |= (1 << bit)
     return gamma
