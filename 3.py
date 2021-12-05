@@ -14,7 +14,7 @@ def get_gamma(input):
     gamma = 0
     for bit, count in enumerate(reversed(counts)):
         if count >= half_input_count:
-            gamma += (1 << bit)
+            gamma |= (1 << bit)
     return gamma
 
 def part1(input):
