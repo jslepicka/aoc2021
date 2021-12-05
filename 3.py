@@ -16,13 +16,13 @@ def part1(input):
         gamma <<= 1
         if counts[i] > half_input_count:
             gamma |= 1
-    epsilon = gamma ^ (2**num_bits - 1)
+    epsilon = gamma ^ ((1 << num_bits) - 1)
     return gamma * epsilon
 
 def get_rating(input, least_common=False):
     result = input
     bit = num_bits - 1
-    gamma_xor = 2**num_bits - 1
+    gamma_xor = ((1 << num_bits) - 1)
     while len(result) > 1:
         new_result = []
         half_input_count = len(result)/2
