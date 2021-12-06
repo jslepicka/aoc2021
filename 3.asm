@@ -11,15 +11,15 @@ szFilename db "3.txt", 0
 szReadMode db "r", 0
 szPart1 db "Part 1: %d", 10, 0
 szPart2 db "Part 2: %d", 10, 0
-counts dd 12 dup(0)
 
 .data?
 strbuf db 16 dup (?)
 filehandle dd ?
 
-input dd 1024 dup(?)
+input dd 1024 dup (?)
 input_copy dd 1024 dup (?)
-temp_input dd 1024 dup(?)
+temp_input dd 1024 dup (?)
+counts dd 12 dup (?)
 
 .code
 extern printf:near
@@ -36,9 +36,8 @@ main PROC C
 
 	call read_input
 	cmp eax, -1
-	jne @F
-	ret
-@@:
+	je return
+
 	mov input_count, eax
 	push eax
 	push offset input
@@ -61,9 +60,10 @@ main PROC C
 	call printf
 	add esp, 8
 
+	mov eax, 0
+return:
 	mov esp, ebp
 	pop ebp
-	mov eax, 0
 	ret
 main ENDP
 
@@ -86,7 +86,7 @@ read_input proc
 	cmp eax, 0
 	jne continue
 	mov eax, -1
- jmp return
+	jmp return
 continue:
 	mov [filehandle], eax
 
@@ -167,8 +167,8 @@ notset:
 	cmp esi, input_count
 	jne scanloop
 
-return:
 	mov eax, dword ptr [counts]
+return:
 	mov esp, ebp
 	pop ebp
 	ret
@@ -189,11 +189,12 @@ get_gamma proc
 
 	xor eax, eax ;gamma
 	mov ebx, input_count
-	;shr ebx, 1			;ebx has input_count / 2
 
 	mov esi, 0
 countloop:
 	mov edx, dword ptr [counts + esi*4]
+	; need to compare count to input_count / 2, but need to take, e.g., 1.5 into account without floating point
+	; so instead of diving input_count by 2, we'll just multiple count by 2 instead.
 	shl edx, 1
 	cmp edx, ebx
 	jl continue
@@ -252,15 +253,11 @@ get_rating proc
 	mov ebp, esp
 	sub esp, 20
 
-	;copy input into input_copy
-	mov esi, 0
-	mov ebx, input_ptr
-@@:
-	mov eax, [ebx + esi*4]
-	mov [input_copy + esi*4], eax
-	inc esi
-	cmp esi, 1024
-	jne @B
+	;copy input to input_copy
+	mov esi, input_ptr
+	mov edi, offset input_copy
+	mov ecx, 1024
+	rep movsd
 
 	mov ecx, 11 ;bit
 
@@ -363,6 +360,4 @@ return:
 
 part2 ENDP
 
-
 END
-
