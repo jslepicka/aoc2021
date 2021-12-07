@@ -5,10 +5,7 @@ szFilename db "6.txt", 0
 szReadMode db "r", 0
 szPart1 db "Part 1: %llu", 10, 0
 szPart2 db "Part 2: %llu", 10, 0
-initial_states db 512 dup (0)
-
-.data?
-
+initial_state_counts dq 512 dup (0)
 
 .code
 extern printf:near
@@ -16,23 +13,19 @@ extern fopen:near
 extern fclose:near
 extern fgetc:near
 
-;x64 calling convention
-;RCX, RDX, R8, R9 or fp XMM0, XMM1, XMM2, XMM3
-;return result in RAX or XMM0
-
 main proc
 	sub rsp, 38h
 	
 	call read_input
 	
 	mov rcx, 80
-	call sim_state
+	call simulate
 	mov rcx, offset szPart1
 	mov rdx, rax
 	call printf
 
 	mov rcx, 256
-	call sim_state
+	call simulate
 	mov rcx, offset szPart2
 	mov rdx, rax
 	call printf
@@ -43,7 +36,7 @@ main proc
 main endp
 
 read_input proc
-	filehandle equ [rbp - 8] ;64-bit var
+	filehandle equ [rbp - 8]
 	push rbp
 	mov rbp, rsp
 	sub rsp, 40h
@@ -70,55 +63,53 @@ read_loop:
 	cmp rax, ','
 	je read_loop
 	sub rax, 48
-	inc [initial_states + rax]
+	inc [initial_state_counts + rax*8]
 	jmp read_loop
 eof:
 	mov rcx, filehandle
 	call fclose
 
+	mov rax, 0
 return:
 	mov rsp, rbp
 	pop rbp
 	ret
-read_input ENDP
+read_input endp
 
-sim_state proc
-	states equ [rbp - 128]
-	days equ [rbp - 136]
+simulate proc
+	state_counts equ [rbp - 128]
 	push rbp
 	mov rbp, rsp
-	sub rsp, 0C0h
+	sub rsp, 0B8h
 
-	mov days, rcx
+	mov r8, rcx
 
 	;copy initial state to states
 	xor rcx, rcx
-	xor rax, rax
 copyloop:
-	mov al, byte ptr [initial_states + rcx]
-	mov qword ptr [states + rcx*8], rax
+	mov rax, qword ptr [initial_state_counts + rcx*8]
+	mov qword ptr [state_counts + rcx*8], rax
 	inc rcx
 	cmp rcx, 9
 	jne copyloop
 
-	mov r8, days
 	xor r9, r9
 simloop:
-	mov r9, states
+	mov r9, state_counts
 
 	xor rax, rax
 	xor rcx, rcx
 shiftloop:
-	mov rax, qword ptr [states+rcx*8+8]
-	mov qword ptr [states+rcx*8], rax
+	mov rax, qword ptr [state_counts + rcx*8 + 8]
+	mov qword ptr [state_counts + rcx*8], rax
 	inc rcx
 	cmp rcx, 8
 	jne shiftloop
 
-	mov rcx, 8
-	mov qword ptr [states+rcx*8], r9
-	mov rcx, 6
-	add qword ptr [states+rcx*8], r9
+	lea rcx, [state_counts + rcx*8] ;rcx pointing to state_counts[8]
+	mov [rcx], r9
+	sub rcx, 16						;rcx pointing to state_counts[6]
+	add [rcx], r9
 
 	dec r8
 	jnz simloop
@@ -126,7 +117,7 @@ shiftloop:
 	xor rcx, rcx
 	xor rax, rax
 sumloop:
-	add rax, qword ptr [states+rcx*8]
+	add rax, qword ptr [state_counts + rcx*8]
 	inc rcx
 	cmp rcx, 9
 	jne sumloop
@@ -135,6 +126,6 @@ return:
 	mov rsp, rbp
 	pop rbp
 	ret
-sim_state endp
+simulate endp
 
 END
