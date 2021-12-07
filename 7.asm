@@ -5,13 +5,12 @@ szFilename db "7.txt", 0
 szReadMode db "r", 0
 szPart1 db "Part 1: %llu", 10, 0
 szPart2 db "Part 2: %llu", 10, 0
-positions dq 1024 dup (0)
-dbl_pointfive real8 0.5
 
 .data?
 min_input dq ?
 max_input dq ?
 input_count dq ?
+positions dq 1024 dup (?)
 
 .code
 extern printf:near
@@ -136,17 +135,10 @@ inputloop:
 	add r8, rax
 	jmp continue
 quadratic:
-	;convert rax to double in xmm0
-	cvtsi2sd xmm0, rax
-	;copy to xmm1
-	movaps xmm1, xmm0
-	;square xmm0
-	mulsd xmm0, xmm0
-	;multiply xmm0 and xmm1 by .5
-	mulsd xmm0, dbl_pointfive
-	mulsd xmm1, dbl_pointfive
-	addsd xmm0, xmm1
-	cvtsd2si rax, xmm0
+	mov rbx, rax
+	imul rax, rax
+	add rax, rbx
+	shr rax, 1
 	add r8, rax
 continue:
 	inc rcx

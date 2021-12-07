@@ -5,7 +5,7 @@ def calc_fuel(input, model="linear"):
     if model == "linear":
         get_fuel_cost = lambda d: d
     elif model == "quadratic":
-        get_fuel_cost = lambda d: .5 * d*d + .5 * d
+        get_fuel_cost = lambda d: (d + d*d)/2
     else:
         return None
     
