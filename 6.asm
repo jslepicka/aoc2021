@@ -106,9 +106,9 @@ shiftloop:
 	cmp rcx, 8
 	jne shiftloop
 
-	lea rcx, [state_counts + rcx*8] ;rcx pointing to state_counts[8]
+	lea rcx, [state_counts + rcx*8]	;rcx pointing to state_counts[8]
 	mov [rcx], r9
-	sub rcx, 16						;rcx pointing to state_counts[6]
+	sub rcx, 16                     ;rcx pointing to state_counts[6]
 	add [rcx], r9
 
 	dec r8
