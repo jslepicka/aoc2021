@@ -84,7 +84,7 @@ simulate proc
 
 	mov r8, rcx
 
-	;copy initial state to states
+	;copy initial_state_counts to state_counts
 	xor rcx, rcx
 copyloop:
 	mov rax, qword ptr [initial_state_counts + rcx*8]
