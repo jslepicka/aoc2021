@@ -1,20 +1,17 @@
 def part1(input):
-    right_input = []
-    for line in input:
-        i = line.split("|")
-        right_input.append(i[1].split())
-    s = 0
-    for x in right_input:
+    output = [line.split("|")[1].split() for line in input]
+    result = 0
+    for x in output:
         for p in x:
             l = len(p)
             if l <= 4 or l == 7:
-                s += 1
-    return s
+                result += 1
+    return result
 
 def part2(input):
-    # we know which patterns 1, 4, 7, and 8 are
-    # for the others, we can see how they differ from the known patterns
-    # for example, 9 has 6 segments and shares two segments with 1, 4 segments
+    # We know which patterns 1, 4, 7, and 8 are.
+    # For the others, we can see how they differ from the known patterns.
+    # For example, 9 has 6 segments and shares two segments with 1, 4 segments
     # with 4, and 3 segments with 7.  So we can subtract set(pattern 4) from
     # set(pattern 9) and if the result is 2 remaining, we know that pattern is 9.
     # Repeat with other 6 segment numbers, chosing an appropriate/most specific
@@ -27,38 +24,38 @@ def part2(input):
     #   6	1	3	2	6
     #   9	2	4	3	6
 
-    s = 0
+    result = 0
     for line in input:
         patterns = []
         output = []
         l, r = line.split("|")
         for x in l.split():
-            x = [c for c in x]
+            x = list(x)
             x.sort()
             patterns.append("".join(x))
         for x in r.split():
-            x = [c for c in x]
+            x = list(x)
             x.sort()
             output.append("".join(x))
         patterns.sort(key=lambda x: len(x))
 
         sets = [0] * 8
         digits = {}
-
         for p in patterns:
+            a = list(p)
             if len(p) == 2:
-                sets[1] = set([x for x in p])
+                sets[1] = set(a)
                 digits[p] = 1
             elif len(p) == 3:
-                sets[7] = set([x for x in p])
+                sets[7] = set(a)
                 digits[p] = 7
             elif len(p) == 4:
-                sets[4] = set([x for x in p])
+                sets[4] = set(a)
                 digits[p] = 4
             elif len(p) == 7:
                 digits[p] = 8
             else:
-                a = set([x for x in p])
+                a = set(a)
                 if len(p) == 5:
                     if len(a - sets[7]) == 2:
                         digits[p] = 3
@@ -77,9 +74,9 @@ def part2(input):
         for o in output:
             out *= 10
             out += digits[o]
-        s += out
+        result += out
 
-    return s
+    return result
 
 def main():
     input = []
