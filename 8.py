@@ -16,13 +16,13 @@ def part2(input):
     # set(pattern 9) and if the result is 2 remaining, we know that pattern is 9.
     # Repeat with other 6 segment numbers, chosing an appropriate/most specific
     # set to compare to.  Common segments:
-    #       1	4	7	8
-    #   0	2	3	3	6
-    #   2	1	2	2	5
-    #   3	2	3	3	5
-    #   5	1	3	2	5
-    #   6	1	3	2	6
-    #   9	2	4	3	6
+    #       1   4   7   8
+    #   0   2   3   3   6
+    #   2   1   2   2   5
+    #   3   2   3   3   5
+    #   5   1   3   2   5
+    #   6   1   3   2   6
+    #   9   2   4   3   6
 
     result = 0
     for line in input:
