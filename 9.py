@@ -1,6 +1,5 @@
 from collections import defaultdict
 neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-
 def add_points(p1, p2):
     return (p1[0] + p2[0], p1[1] + p2[1])
 
@@ -34,10 +33,12 @@ def get_basin_depth(input, low_point):
     queue.append(low_point)
     while queue:
         p = queue.pop(0)
+        if p in visited:
+            continue
         visited[p] = 1
         for n in range(4):
             p2 = (add_points(p, neighbors[n]))
-            if input[p2] < 9 and p2 not in visited:
+            if input[p2] < 9:
                 queue.insert(0, p2)
     return len(visited)
 
