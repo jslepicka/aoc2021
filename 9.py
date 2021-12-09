@@ -64,5 +64,6 @@ def main():
 
     print("Part 1: " + str(part1(input)))
     print("Part 2: " + str(part2(input)))
+
 if __name__ == "__main__":
     main()
