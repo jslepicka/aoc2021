@@ -26,7 +26,6 @@ def part1(input, width, height):
     return result
 
 def get_basin_depth(input, low_point):
-    global james
     queue = []
     visited = {}
     #DFS
