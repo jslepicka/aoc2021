@@ -1,5 +1,4 @@
 from collections import defaultdict
-
 neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
 def add_points(p1, p2):
@@ -27,9 +26,10 @@ def part1(input, width, height):
     return result
 
 def get_basin_depth(input, low_point):
+    global james
     queue = []
     visited = {}
-    #BFS
+    #DFS
     queue.append(low_point)
     while queue:
         p = queue.pop(0)
@@ -37,7 +37,7 @@ def get_basin_depth(input, low_point):
         for n in range(4):
             p2 = (add_points(p, neighbors[n]))
             if input[p2] < 9 and p2 not in visited:
-                queue.append(p2)
+                queue.insert(0, p2)
     return len(visited)
 
 def part2(input, width, height):
@@ -66,6 +66,5 @@ def main():
 
     print("Part 1: " + str(part1(input, width, height)))
     print("Part 2: " + str(part2(input, width, height)))
-
 if __name__ == "__main__":
     main()
