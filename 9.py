@@ -55,7 +55,7 @@ def main():
     input = defaultdict(lambda: 10)
     with open("9.txt") as file:
         y = 0
-        for line in  [x.strip() for x in file.readlines()]:
+        for line in [x.strip() for x in file.readlines()]:
             x = 0
             for i in list(line):
                 input[(x, y)] = int(i)
