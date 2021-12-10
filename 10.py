@@ -8,7 +8,6 @@ def process_line(line):
         ">": 25137
     }
     stack = []
-    corrupted = False
     corrupted_score = None
     incomplete_score = None
     for c in list(line):
@@ -16,13 +15,11 @@ def process_line(line):
             stack.append(c)
         elif c in closers:
             if stack.pop() != openers[closers.index(c)]:
-                corrupted = True
+                corrupted_score = points[c]
                 break
         else:
             return None, None
-    if corrupted:
-        corrupted_score = points[c]
-    else:
+    if not corrupted_score:
         incomplete_score = 0
         for i in reversed(stack):
             incomplete_score *= 5
