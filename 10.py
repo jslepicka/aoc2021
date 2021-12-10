@@ -1,53 +1,49 @@
-def part1(input):
+def process_line(line):
     openers = list("([{<")
     closers = list(")]}>")
-    illegal_chars = []
-    for line in input:
-        stack = []
-        for c in list(line):
-            if c in openers:
-                stack.insert(0, c)
-            elif c in closers:
-                d = stack.pop(0)
-                closer_index = closers.index(c)
-                if d != openers[closer_index]:
-                    illegal_chars.append(c)
-            else:
-                return None
     points = {
         ")": 3,
         "]": 57,
         "}": 1197,
         ">": 25137
     }
-    score = sum([points[x] for x in illegal_chars])
+    stack = []
+    corrupted = False
+    corrupted_score = None
+    incomplete_score = None
+    for c in list(line):
+        if c in openers:
+            stack.append(c)
+        elif c in closers:
+            if stack.pop() != openers[closers.index(c)]:
+                corrupted = True
+                break
+        else:
+            return None, None
+    if corrupted:
+        corrupted_score = points[c]
+    else:
+        incomplete_score = 0
+        for i in reversed(stack):
+            incomplete_score *= 5
+            incomplete_score += openers.index(i) + 1
+    return corrupted_score, incomplete_score
+
+def part1(input):
+    score = 0
+    for line in input:
+        s, _ = process_line(line)
+        if s:
+            score += s
     return score
 
 def part2(input):
-    incomplete = []
-    openers = list("([{<")
-    closers = list(")]}>")
-
     scores = []
     for line in input:
-        stack = []
-        corrupted = False
-        for c in list(line):
-            if c in openers:
-                stack.insert(0, c)
-            elif c in closers:
-                if stack.pop(0) != openers[closers.index(c)]:
-                    corrupted = True
-                    break
-            else:
-                return None
-        if corrupted:
-            continue
-        score = 0
-        for i in stack:
-            score *= 5
-            score += openers.index(i) + 1
-        scores.append(score)
+        _, s = process_line(line)
+        if s:
+            scores.append(s)
+
     scores.sort()
     median_score = scores[len(scores)//2]
     return median_score
