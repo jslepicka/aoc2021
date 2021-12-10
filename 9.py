@@ -27,19 +27,19 @@ def part1(input):
     return result
 
 def get_basin_depth(input, low_point):
-    queue = []
+    stack = []
     visited = {}
     #DFS
-    queue.append(low_point)
-    while queue:
-        p = queue.pop(0)
+    stack.append(low_point)
+    while stack:
+        p = stack.pop()
         if p in visited:
             continue
         visited[p] = 1
         for n in range(4):
             p2 = (add_points(p, neighbors[n]))
             if input[p2] < 9:
-                queue.insert(0, p2)
+                stack.append(p2)
     return len(visited)
 
 def part2(input):
