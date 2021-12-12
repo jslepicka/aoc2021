@@ -1,7 +1,7 @@
 from collections import defaultdict
-neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-def add_points(p1, p2):
-    return (p1[0] + p2[0], p1[1] + p2[1])
+
+def get_neighbors(x, y):
+    return [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
 
 def get_low_points(input):
     low_points = []
@@ -12,8 +12,8 @@ def get_low_points(input):
             p = (x, y)
             v = input[p]
             low = True
-            for n in range(4):
-                if not v < input[add_points(p, neighbors[n])]:
+            for n in get_neighbors(*p):
+                if not v < input[n]:
                     low = False
                     break
             if low:
@@ -36,10 +36,9 @@ def get_basin_depth(input, low_point):
         if p in visited:
             continue
         visited[p] = 1
-        for n in range(4):
-            p2 = (add_points(p, neighbors[n]))
-            if input[p2] < 9:
-                stack.append(p2)
+        for n in get_neighbors(*p):
+            if input[n] < 9:
+                stack.append(n)
     return len(visited)
 
 def part2(input):
