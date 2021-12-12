@@ -1,6 +1,7 @@
 from collections import defaultdict
 
-neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+def get_neighbors(x, y):
+    return [(x-1, y), (x+1, y), (x, y-1), (x, y+1), (x-1, y-1), (x-1, y+1), (x+1, y-1), (x+1, y+1)]
 
 def draw(input):
     width = max(input, key=lambda p: p[0])[0] + 1
@@ -28,15 +29,13 @@ def inc_energy(input):
         for f in flashes:
             flash_count += 1
             input[f] = 0
-            for n in neighbors:
-                x = f[0] + n[0]
-                y = f[1] + n[1]
-                e = input[(x, y)]
+            for n in get_neighbors(*f):
+                e = input[n]
                 if e > 0:
                     e += 1
-                    input[(x, y)] = e
+                    input[n] = e
                     if e == 10:
-                        new_flashes.append((x, y))
+                        new_flashes.append(n)
         flashes = new_flashes
         
     return flash_count
