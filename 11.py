@@ -54,8 +54,7 @@ def part2(input):
     step = 0
     while True:
         step += 1
-        flash_count = inc_energy(input)
-        if flash_count == 100:
+        if inc_energy(input) == 100:
             return step
 
 def main():
