@@ -22,24 +22,23 @@ def inc_energy(input):
             input[i] = e
             if e == 10:
                 flashes.append(i)
+
     while flashes:
         new_flashes = []
         for f in flashes:
             flash_count += 1
-            input[f] = 99
+            input[f] = 0
             for n in neighbors:
                 x = f[0] + n[0]
                 y = f[1] + n[1]
                 e = input[(x, y)]
-                if e != -1:
+                if e > 0:
                     e += 1
                     input[(x, y)] = e
                     if e == 10:
                         new_flashes.append((x, y))
         flashes = new_flashes
-    for i in input:
-        if input[i] > 9:
-            input[i] = 0
+        
     return flash_count
 
 def part1(input):
